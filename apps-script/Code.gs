@@ -36,9 +36,23 @@ var SETTING_DEFS = [
 var SECRET_KEYS = ['adminPassword', 'viewToken'];
 var NUM_SETTINGS = ['mercFeeDefault', 'noMatchDay'];
 
+/* ───────── 스프레드시트 찾기 ───────── */
+var SS_ = null;
+function ss_() {
+  if (SS_) return SS_;
+  var props = PropertiesService.getScriptProperties();
+  var id = props.getProperty('sheetId');
+  if (id) return (SS_ = SpreadsheetApp.openById(id));
+  var active = SpreadsheetApp.getActiveSpreadsheet();
+  if (active) return (SS_ = active);
+  SS_ = SpreadsheetApp.create('풋살 기록');
+  props.setProperty('sheetId', SS_.getId());
+  return SS_;
+}
+
 /* ───────── 최초 설치 ───────── */
 function setup() {
-  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var ss = ss_();
   Object.keys(SCHEMA).forEach(function (key) {
     var def = SCHEMA[key];
     var sh = ss.getSheetByName(def.sheet) || ss.insertSheet(def.sheet);
@@ -73,7 +87,7 @@ function setup() {
 
   installTrigger();
   var s = readSettingsRaw_();
-  Logger.log('설치 완료. 비밀번호: ' + s.adminPassword + ' / 알림 메일: ' + s.email);
+  Logger.log('설치 완료. 시트 주소: ' + ss.getUrl());
 }
 
 function installTrigger() {
@@ -146,7 +160,7 @@ function loadAll_(role) {
 
 /* ───────── 시트 읽기·쓰기 ───────── */
 function sheet_(key) {
-  var sh = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(SCHEMA[key].sheet);
+  var sh = ss_().getSheetByName(SCHEMA[key].sheet);
   if (!sh) throw new Error('시트가 없습니다: ' + SCHEMA[key].sheet + ' (setup을 먼저 실행하세요)');
   return sh;
 }
@@ -191,7 +205,7 @@ function deleteRow_(key, id) {
 }
 
 function readSettingsRaw_() {
-  var sh = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(SETTINGS_SHEET), o = {};
+  var sh = ss_().getSheetByName(SETTINGS_SHEET), o = {};
   if (!sh || sh.getLastRow() < 2) return o;
   sh.getRange(2, 1, sh.getLastRow() - 1, 2).getDisplayValues().forEach(function (r) { if (r[0]) o[r[0]] = r[1]; });
   return o;
@@ -203,7 +217,7 @@ function readSettings_() {
   return s;
 }
 function writeSettings_(obj) {
-  var sh = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(SETTINGS_SHEET);
+  var sh = ss_().getSheetByName(SETTINGS_SHEET);
   var keys = sh.getRange(2, 1, Math.max(sh.getLastRow() - 1, 1), 1).getDisplayValues().map(function (r) { return r[0]; });
   SETTING_DEFS.forEach(function (d) {
     var k = d[0];
