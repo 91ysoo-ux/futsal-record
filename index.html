@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#14804a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="풋살 기록">
+<title>풋살 기록</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <h1>풋살 기록</h1>
+  <span id="sync"></span>
+</header>
+<main id="app"></main>
+<nav id="nav">
+  <a href="#home" data-tab="home"><i>🏠</i>홈</a>
+  <a href="#res" data-tab="res"><i>📅</i>예약</a>
+  <a href="#matches" data-tab="matches"><i>⚽</i>경기</a>
+  <a href="#stats" data-tab="stats"><i>📊</i>통계</a>
+  <a href="#settings" data-tab="settings"><i>⚙️</i>설정</a>
+</nav>
+<div id="modal" hidden></div>
+<div id="toast" hidden></div>
+<script src="config.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
