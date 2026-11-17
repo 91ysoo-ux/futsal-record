@@ -59,6 +59,12 @@ function normalize(d) {
   if (!d) return out;
   LISTS.forEach(k => { if (Array.isArray(d[k])) out[k] = d[k]; });
   out.settings = Object.assign({}, DEFAULT_SETTINGS, d.settings || {});
+  // 시트가 "09:00"을 "9:00"으로 바꿔 보내는 경우 시각 입력란에 맞게 보정
+  ['noMatchTime', 'resultTime1', 'resultTime2'].forEach(k => {
+    const m = /^(\d{1,2}):(\d{2})/.exec(String(out.settings[k] || ''));
+    if (m) out.settings[k] = pad(m[1]) + ':' + m[2];
+  });
+  out.sites.forEach(s => { const m = /^(\d{1,2}):(\d{2})/.exec(String(s.time || '')); if (m) s.time = pad(m[1]) + ':' + m[2]; });
   out.viewToken = d.viewToken || '';
   out.matches.forEach(m => {
     m.attendees = m.attendees || []; m.mercs = m.mercs || []; m.rounds = m.rounds || []; m.goals = m.goals || [];
