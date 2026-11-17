@@ -108,6 +108,9 @@ async function sync() {
     if (!queue.length && !needLogin) {
       const j = await apiPost({ action: 'load' });
       db = normalize(j.data); persist(); syncErr = '';
+      // 알림 메일에 들어갈 앱 주소를 자동으로 기록
+      const appUrl = location.origin + location.pathname;
+      if (!RO && /^https:/.test(appUrl) && db.settings.appUrl !== appUrl) { db.settings.appUrl = appUrl; saveSettings(); }
     }
   } catch (e) {
     if (e.message === 'auth') authFailed(); else syncErr = e.message;

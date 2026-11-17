@@ -1,3 +1,3 @@
 // 구글 앱스 스크립트 웹 앱 주소를 따옴표 안에 넣으세요.
 // 비워 두면 이 기기(브라우저)에만 저장되는 미리보기 모드로 동작합니다.
-window.FUTSAL_API = '';
+window.FUTSAL_API = 'https://script.google.com/macros/s/AKfycbyR6cFwysfqUD-I8VQYrEUcLqbu_WfrhlZ02hh0XJyYyUW6Zxwffqtg_6KAUEDTi0hw/exec';
